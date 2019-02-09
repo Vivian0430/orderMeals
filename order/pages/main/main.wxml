@@ -1,0 +1,120 @@
+<view class='container'>
+  <view class='bg'>
+    <text style='font-size:16px;color:white;margin-left:26vw;position:relative;top:5vh;'>傻老帽土菜馆</text>
+  </view>
+  <view style='flex:1;display: flex;flex-direction: column;'>
+    <view class='nav'>
+      <view style='position:absolute;left:8vw;top:-5vh;'>
+        <view style='width:16vw;height:10vh;background-color:rgb(255,255,255);z-index:9' class='input-item input-item-full'>
+          <view class='img-upload' style='width:100%;height:100%;position: relative;'>
+            <view class='img-add' bindtap='chooseImage' style='width:16vw;height:10vh;'></view>
+            <view class='img-item' style='width:100%;position: absolute;left: 0;top: 0'>
+              
+        <image src='{{cover}}' mode='aspectFill' style='width:16vw;height:10vh;'></image>
+              <!-- <image src='/images/logo.png' mode='aspectFill' style='width:16vw;height:10vh;'></image> -->
+            </view>
+          </view>
+        </view>
+ 
+      </view>
+      <view class='notice'>
+        <text class="{{isShowed?'inline-show':'hide'}}">
+        <text class='iconfont icon-tongzhi' style='font-size:14px;font-weight:550;color:gray;margin-right:5rpx'></text>
+        <text style='font-size:12px;color:gray;'>新客立减20元</text>
+        </text>
+        <text class="{{isShowed?'hide':'inline-show'}}">
+        <text class='iconfont icon-tongzhi' style='font-size:16px;font-weight:550;color:gray;margin-right:5rpx;position:relative;top:3rpx;'></text>
+        <text style='font-size:14px;color:gray;'>暂无公告</text>
+        </text>
+        <text class="iconfont {{isShowed?'icon-zhankai':'icon-shousuo'}}" style='font-size:14px;color:gray;float:right' bindtap='showDetails'></text>
+      </view>
+    </view>
+  <!--   <view class="details {{isShowed?'hide':'show'}}">
+      <text>新客立减20元</text>
+      <text>首单立减10元</text>
+      <text>满21减20</text>
+      <text>满50减30</text>
+    </view> -->
+    <view style="flex:1;flex-direction: column;">
+      <view class="tab" style='background-color:rgb(250,250,250);'>
+        <view class="tab-item {{isTabed?'active':''}}" bindtap="clickTab1">点单</view>
+        <view class="tab-item {{!isTabed?'active':''}}" bindtap="clickTab2">我的订单</view>
+      </view>
+      <view style="z-index: -1;flex:1;overflow: hidden" class="{{showOrder?'show':'hide'}}">
+        <view style="display: flex;">
+          <scroll-view scroll-y class='product-menu'>
+            <view class='selected'>全部</view>
+          </scroll-view>
+
+          <scroll-view scroll-y class='product-list'>
+
+            <block wx:for="{{products}}">
+              <view class="product">
+                <view style='width:200rpx'>
+                  <image src="{{item.path}}"></image>
+                </view>
+                <view style="position: absolute;top: 0;left:200rpx;height: 100%;display: flex;flex-direction: column;width:200rpx">
+                  <view style="height: 100rpx;line-height: 100rpx;">
+                    <text style="font-size:14px;color: gray">{{item.name}}</text>
+                  </view>
+                  <view style="height: 100rpx;line-height: 100rpx;">
+                    <text style="font-size:14px;color: gray">{{item.price}}</text>
+                  </view>
+                </view>
+                <view style='width:200rpx;position:relative;left:300rpx'>
+                   <text class='iconfont icon-add' style='color:#1aad19;position:absolute;bottom:40rpx' bindtap='addCart' data-id='{{index}}'></text>
+                </view>
+              </view>
+            </block>
+          </scroll-view>
+
+        </view>
+      </view>
+      <view class="{{showOrder?'hide':'show'}}" style="flex:1">
+        <block wx:for="{{order}}">
+
+        </block>
+      </view>
+    </view>
+    <view class="fix-box {{showFixed?'hide':'show'}}" bindtap='outbtn'></view>
+    <view class='footer'>
+      <view style='background-color:white;border-top:2rpx solid #eaeaea;width:60px;height:60px;line-height:60px;border-radius:50%;position:absolute;top:-5vh;left:10vw;text-align:center'>
+        <text bindtap='showCart' class='iconfont icon-cart' style='color:#1aad19;font-size:50px;z-index:10'></text>
+      </view>
+      <view>
+        <text class='price'>￥{{price}}</text>
+      </view>
+      <navigator style='width:35vw;position:absolute;right:0;color:white;background-color:#1aad19;text-align:center' bindtap='submitOrder' url='/pages/order/order' open-type='redirect'>
+        <text>去下单</text>
+     </navigator>
+    </view>
+    <view class="add-info {{aniStyle?'show':'hide'}}" style="height:{{isAdd?'auto':'10vh'}};" catchtap='inbtn'>
+          <view style='text-align:center;line-height:10vh;' class="{{isAdd?'hide':'show'}}">
+          <text style='font-size:14px;color:gray'>购物车为空</text> 
+          </view>
+          <scroll-view scroll-y class="{{isAdd?'show':'hide'}}" style='height:40vh;'>
+          <block wx:for="{{cart}}">
+          <view style='display:flex;font-size:13px;color:gray;margin:2vh 0;'>
+            <view>
+            <image src='{{item.cartPath}}' style='width:14vw;height:9vh;margin:0 5vw;'></image>
+            </view>
+            <view style='height:9vh;line-height:9vh;text-align:left;width:30vw'>
+            <text>{{item.cartName}}</text>
+            </view>
+            <view style='height:9vh;line-height:9vh;text-align:center;width:20vw;display:flex'>
+            <text bindtap='decreaseProduct' data-id='{{item._id}}'>-</text>
+            <text style='margin:0 2vw;'>{{item.cartCount}}</text>
+            <text bindtap='increaseProduct' data-id='{{item._id}}'>+</text>
+            </view>
+            <view style='height:9vh;line-height:9vh;text-align:center;width:15vw;'>
+            <text>￥{{item.cartCount * item.cartPrice}}</text>
+            </view>
+            <view style='height:9vh;line-height:9vh;text-align:center;'> 
+            <text class='iconfont icon-delete' bindtap='deleteProduct' data-id='{{item._id}}'></text>
+            </view>
+          </view>
+          </block>
+          </scroll-view>
+    </view>
+  </view>
+</view>
